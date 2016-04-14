@@ -1,4 +1,4 @@
-package main
+package user
 
 type User struct {
 	Username     string
@@ -6,7 +6,9 @@ type User struct {
 	Email        string
 }
 
-var users = map[string]User{
+type Users map[string]User
+
+var DB = Users{
 	"khightower": User{
 		Username: "khightower",
 		// bcrypt hash for 123456789

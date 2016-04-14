@@ -1,4 +1,4 @@
-package main
+package handlers
 
 import (
 	"net/http"
@@ -6,7 +6,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 )
 
-func jwtAuthHandler(h http.HandlerFunc) http.HandlerFunc {
+func JWTAuthHandler(h http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		token, err := jwt.ParseFromRequest(r, func(token *jwt.Token) (interface{}, error) {
 			return []byte("123456789"), nil
