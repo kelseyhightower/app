@@ -44,15 +44,17 @@ $ ./server
 ### Test with cURL
 
 ```
-$ curl --cacert ./ca.pem -u khightower https://127.0.0.1:5000/login
+$ curl --cacert ./ca.pem -u user https://127.0.0.1:5000/login
 ```
 ```
-Enter host password for user 'khightower':
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImtoaWdodG93ZXJAZXhhbXBsZS5jb20iLCJleHAiOjE0NjA5ODY3MzcsImlhdCI6MTQ2MDcyNzUzNywiaXNzIjoiYXV0aC5zZXJ2aWNlIiwic3ViIjoia2hpZ2h0b3dlciJ9.IKCscmZ-ukF-mEb4RqKXhks25ieTPJ7JG_4ZWuDuJVg
+Enter host password for user 'user':
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJAZXhhbXBsZS5jb20iLCJleHAiOjE0NjA5ODcxOTcsImlhdCI6MTQ2MDcyNzk5NywiaXNzIjoiYXV0aC5zZXJ2aWNlIiwic3ViIjoidXNlciJ9.x3oFhRhWk5CGYfGcrNctPGWCENEsXpUuKPDQU2ZOLCY
 ```
 
+> type "password" at the prompt
+
 ```
-curl --cacert ./ca.pem -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImtoaWdodG93ZXJAZXhhbXBsZS5jb20iLCJleHAiOjE0NjA5ODY3MzcsImlhdCI6MTQ2MDcyNzUzNywiaXNzIjoiYXV0aC5zZXJ2aWNlIiwic3ViIjoia2hpZ2h0b3dlciJ9.IKCscmZ-ukF-mEb4RqKXhks25ieTPJ7JG_4ZWuDuJVg' https://127.0.0.1:5000/
+curl --cacert ./ca.pem -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJAZXhhbXBsZS5jb20iLCJleHAiOjE0NjA5ODcxOTcsImlhdCI6MTQ2MDcyNzk5NywiaXNzIjoiYXV0aC5zZXJ2aWNlIiwic3ViIjoidXNlciJ9.x3oFhRhWk5CGYfGcrNctPGWCENEsXpUuKPDQU2ZOLCY' https://127.0.0.1:5000/
 ```
 ```
 <h1>Hello</h1>
