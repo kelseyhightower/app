@@ -16,17 +16,8 @@ import (
 )
 
 func main() {
-	var (
-		httpAddr   = flag.String("http", "0.0.0.0:5000", "HTTP service address.")
-		healthAddr = flag.String("health", "0.0.0.0:5001", "Health service address.")
-		secret     = flag.String("secret", "secret", "JWT signing secret.")
-		certFile   = flag.String("cert", "cert.pem", "TLS certificate")
-		keyFile    = flag.String("key", "key.pem", "TLS private key")
-	)
-
-	log.Println("Starting server...")
-	log.Printf("HTTP service listening on %s", *httpAddr)
-	log.Printf("Health service listening on %s", *healthAddr)
+	log.Println("Starting server on 0.0.0.0:8080...")
+	log.Println("Listening on 0.0.0.0:8000 for health checks")
 
 	flag.Parse()
 	errChan := make(chan error, 10)
@@ -37,7 +28,7 @@ func main() {
 	hmux.HandleFunc("/healthz/status", health.HealthzStatusHandler)
 	hmux.HandleFunc("/readiness/status", health.ReadinessStatusHandler)
 	hserver := manners.NewServer()
-	hserver.Addr = *healthAddr
+	hserver.Addr = ":8000"
 	hserver.Handler = handlers.LoggingHandler(hmux)
 
 	go func() {
@@ -45,14 +36,13 @@ func main() {
 	}()
 
 	mux := http.NewServeMux()
-	mux.Handle("/login", handlers.LoginHandler(*secret, user.DB))
 	mux.Handle("/", handlers.JWTAuthHandler(handlers.HelloHandler))
 	server := manners.NewServer()
-	server.Addr = *httpAddr
+	server.Addr = ":8080"
 	server.Handler = handlers.LoggingHandler(mux)
 
 	go func() {
-		errChan <- server.ListenAndServeTLS(*certFile, *keyFile)
+		errChan <- server.ListenAndServe()
 	}()
 
 	signalChan := make(chan os.Signal, 1)
