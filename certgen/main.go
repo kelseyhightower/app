@@ -7,8 +7,10 @@ package main
 import (
 	"crypto/rand"
 	"crypto/rsa"
+	"crypto/sha1"
 	"crypto/x509"
 	"crypto/x509/pkix"
+	"encoding/asn1"
 	"encoding/pem"
 	"flag"
 	"fmt"
@@ -43,8 +45,8 @@ type certificateConfig struct {
 }
 
 func init() {
-	notBefore = time.Now()
-	notAfter = notBefore.Add(365 * 24 * time.Hour)
+	notBefore = time.Now().Add(-5 * time.Minute).UTC()
+	notAfter = notBefore.Add(365 * 24 * time.Hour).UTC()
 	serialNumberLimit = new(big.Int).Lsh(big.NewInt(1), 128)
 
 	flag.StringVar(&host, "host", "", "Comma-separated hostnames and IPs to generate a certificate for")
@@ -126,6 +128,11 @@ func writeCert(name string, cert []byte, key *rsa.PrivateKey) error {
 	return nil
 }
 
+type subjectPublicKeyInfo struct {
+	Algorithm        pkix.AlgorithmIdentifier
+	SubjectPublicKey asn1.BitString
+}
+
 func generateCertificate(c certificateConfig) ([]byte, *rsa.PrivateKey, error) {
 	serialNumber, err := rand.Int(rand.Reader, serialNumberLimit)
 	if err != nil {
@@ -136,6 +143,14 @@ func generateCertificate(c certificateConfig) ([]byte, *rsa.PrivateKey, error) {
 	if err != nil {
 		return nil, nil, err
 	}
+
+	// Generate the subject key ID
+	derEncodedPubKey, err := x509.MarshalPKIXPublicKey(&key.PublicKey)
+	if err != nil {
+		return nil, nil, err
+	}
+	pubKeyHash := sha1.New()
+	pubKeyHash.Write(derEncodedPubKey)
 
 	template := x509.Certificate{
 		SerialNumber: serialNumber,
@@ -148,6 +163,7 @@ func generateCertificate(c certificateConfig) ([]byte, *rsa.PrivateKey, error) {
 		KeyUsage:              c.keyUsage,
 		ExtKeyUsage:           c.extKeyUsage,
 		BasicConstraintsValid: true,
+		SubjectKeyId:          pubKeyHash.Sum(nil),
 	}
 	if c.hosts[0] != "" {
 		template.Subject.CommonName = c.hosts[0]
