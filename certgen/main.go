@@ -128,11 +128,6 @@ func writeCert(name string, cert []byte, key *rsa.PrivateKey) error {
 	return nil
 }
 
-type subjectPublicKeyInfo struct {
-	Algorithm        pkix.AlgorithmIdentifier
-	SubjectPublicKey asn1.BitString
-}
-
 func generateCertificate(c certificateConfig) ([]byte, *rsa.PrivateKey, error) {
 	serialNumber, err := rand.Int(rand.Reader, serialNumberLimit)
 	if err != nil {
