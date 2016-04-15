@@ -20,8 +20,8 @@ func main() {
 		httpAddr   = flag.String("http", "0.0.0.0:5000", "HTTP service address.")
 		healthAddr = flag.String("health", "0.0.0.0:5001", "Health service address.")
 		secret     = flag.String("secret", "secret", "JWT signing secret.")
-		certFile   = flag.String("cert", "cert.pem", "TLS certificate")
-		keyFile    = flag.String("key", "key.pem", "TLS private key")
+		certFile   = flag.String("cert", "server.pem", "TLS certificate")
+		keyFile    = flag.String("key", "server-key.pem", "TLS private key")
 	)
 
 	log.Println("Starting server...")

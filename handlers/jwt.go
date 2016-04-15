@@ -9,7 +9,7 @@ import (
 func JWTAuthHandler(h http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		token, err := jwt.ParseFromRequest(r, func(token *jwt.Token) (interface{}, error) {
-			return []byte("123456789"), nil
+			return []byte("secret"), nil
 		})
 		if err != nil || !token.Valid {
 			http.Error(w, "authorization failed", http.StatusUnauthorized)
