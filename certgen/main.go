@@ -57,7 +57,7 @@ func main() {
 	caCert, caKey, err := generateCertificate(certificateConfig{
 		isCA:        true,
 		hosts:       []string{""},
-		keyUsage:    x509.KeyUsageKeyEncipherment | x509.KeyUsageDigitalSignature,
+		keyUsage:    x509.KeyUsageKeyEncipherment | x509.KeyUsageDigitalSignature | x509.KeyUsageCertSign,
 		extKeyUsage: []x509.ExtKeyUsage{x509.ExtKeyUsageServerAuth},
 	})
 	if err != nil {
@@ -138,7 +138,7 @@ func generateCertificate(c certificateConfig) ([]byte, *rsa.PrivateKey, error) {
 	}
 
 	template := x509.Certificate{
-		SerialNumber: (serialNumber),
+		SerialNumber: serialNumber,
 		Subject: pkix.Name{
 			Organization: []string{"Kubernetes"},
 		},
