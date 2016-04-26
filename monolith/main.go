@@ -17,10 +17,8 @@ import (
 
 func main() {
 	var (
-		enableTLS  = flag.Bool("tls", false, "Enable TLS.")
-		healthAddr = flag.String("health", "0.0.0.0:10081", "Health service address.")
+		healthAddr = flag.String("health", "127.0.0.1:10081", "Health service address.")
 		httpAddr   = flag.String("http", "0.0.0.0:10080", "HTTP service address.")
-		httpsAddr  = flag.String("https", "0.0.0.0:10443", "HTTP service address.")
 		secret     = flag.String("secret", "secret", "JWT signing secret.")
 		certFile   = flag.String("cert", "server.pem", "TLS certificate.")
 		keyFile    = flag.String("key", "server-key.pem", "TLS private key.")
@@ -58,17 +56,6 @@ func main() {
 		errChan <- httpServer.ListenAndServe()
 	}()
 
-	httpsServer := manners.NewServer()
-	httpsServer.Addr = *httpsAddr
-	httpsServer.Handler = handlers.LoggingHandler(mux)
-
-	if *enableTLS {
-		log.Printf("HTTPS service listening on %s", *httpsAddr)
-		go func() {
-			errChan <- httpsServer.ListenAndServeTLS(*certFile, *keyFile)
-		}()
-	}
-
 	signalChan := make(chan os.Signal, 1)
 	signal.Notify(signalChan, syscall.SIGINT, syscall.SIGTERM)
 
@@ -82,9 +69,6 @@ func main() {
 			log.Println(fmt.Sprintf("Captured %v. Exiting...", s))
 			health.SetReadinessStatus(http.StatusServiceUnavailable)
 			httpServer.BlockingClose()
-			if *enableTLS {
-				httpsServer.BlockingClose()
-			}
 			os.Exit(0)
 		}
 	}
