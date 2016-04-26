@@ -46,7 +46,7 @@ func main() {
 
 	mux := http.NewServeMux()
 	mux.Handle("/login", handlers.LoginHandler(*secret, user.DB))
-	ux.Handle("/version", handlers.VersionHandler(version))
+	mux.Handle("/version", handlers.VersionHandler(version))
 
 	httpServer := manners.NewServer()
 	httpServer.Addr = *httpAddr
