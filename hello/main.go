@@ -12,12 +12,19 @@ import (
 	"github.com/braintree/manners"
 	"github.com/kelseyhightower/app/handlers"
 	"github.com/kelseyhightower/app/health"
-	"github.com/kelseyhightower/app/user"
 )
 
+const version = "1.0.0"
+
 func main() {
-	log.Println("Starting server on 0.0.0.0:8080...")
-	log.Println("Listening on 0.0.0.0:8000 for health checks")
+	var (
+		httpAddr   = flag.String("http", "0.0.0.0:80", "HTTP service address.")
+		healthAddr = flag.String("health", "0.0.0.0:81", "Health service address.")
+	)
+
+	log.Println("Starting server...")
+	log.Printf("Health service listening on %s", *healthAddr)
+	log.Printf("HTTP service listening on %s", *httpAddr)
 
 	flag.Parse()
 	errChan := make(chan error, 10)
@@ -27,28 +34,30 @@ func main() {
 	hmux.HandleFunc("/readiness", health.ReadinessHandler)
 	hmux.HandleFunc("/healthz/status", health.HealthzStatusHandler)
 	hmux.HandleFunc("/readiness/status", health.ReadinessStatusHandler)
-	hserver := manners.NewServer()
-	hserver.Addr = ":8000"
-	hserver.Handler = handlers.LoggingHandler(hmux)
+	healthServer := manners.NewServer()
+	healthServer.Addr = *healthAddr
+	healthServer.Handler = handlers.LoggingHandler(hmux)
 
 	go func() {
-		errChan <- hserver.ListenAndServe()
+		errChan <- healthServer.ListenAndServe()
 	}()
 
 	mux := http.NewServeMux()
-	mux.Handle("/", handlers.JWTAuthHandler(handlers.HelloHandler))
-	server := manners.NewServer()
-	server.Addr = ":8080"
-	server.Handler = handlers.LoggingHandler(mux)
+	mux.HandleFunc("/", handlers.HelloHandler)
+	mux.Handle("/secure", handlers.JWTAuthHandler(handlers.HelloHandler))
+	mux.Handle("/version", handlers.VersionHandler(version))
+
+	httpServer := manners.NewServer()
+	httpServer.Addr = *httpAddr
+	httpServer.Handler = handlers.LoggingHandler(mux)
 
 	go func() {
-		errChan <- server.ListenAndServe()
+		errChan <- httpServer.ListenAndServe()
 	}()
 
 	signalChan := make(chan os.Signal, 1)
 	signal.Notify(signalChan, syscall.SIGINT, syscall.SIGTERM)
 
-	log.Println("Started successfully.")
 	for {
 		select {
 		case err := <-errChan:
@@ -58,7 +67,7 @@ func main() {
 		case s := <-signalChan:
 			log.Println(fmt.Sprintf("Captured %v. Exiting...", s))
 			health.SetReadinessStatus(http.StatusServiceUnavailable)
-			server.BlockingClose()
+			httpServer.BlockingClose()
 			os.Exit(0)
 		}
 	}

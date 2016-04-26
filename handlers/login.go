@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"encoding/json"
 	"net/http"
 	"time"
 
@@ -8,6 +9,10 @@ import (
 	"github.com/kelseyhightower/app/user"
 	"golang.org/x/crypto/bcrypt"
 )
+
+type LoginResponse struct {
+	Token string `json:"token"`
+}
 
 type loginHandler struct {
 	secret string
@@ -46,7 +51,10 @@ func (h *loginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Write([]byte(tokenString))
+	response := LoginResponse{
+		Token: tokenString,
+	}
+	json.NewEncoder(w).Encode(response)
 }
 
 func LoginHandler(secret string, users user.Users) http.Handler {

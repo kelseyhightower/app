@@ -15,13 +15,13 @@ import (
 	"github.com/kelseyhightower/app/user"
 )
 
+const version = "1.0.0"
+
 func main() {
 	var (
-		healthAddr = flag.String("health", "127.0.0.1:10081", "Health service address.")
-		httpAddr   = flag.String("http", "0.0.0.0:10080", "HTTP service address.")
+		httpAddr   = flag.String("http", "0.0.0.0:80", "HTTP service address.")
+		healthAddr = flag.String("health", "0.0.0.0:81", "Health service address.")
 		secret     = flag.String("secret", "secret", "JWT signing secret.")
-		certFile   = flag.String("cert", "server.pem", "TLS certificate.")
-		keyFile    = flag.String("key", "server-key.pem", "TLS private key.")
 	)
 
 	log.Println("Starting server...")
@@ -45,8 +45,10 @@ func main() {
 	}()
 
 	mux := http.NewServeMux()
+	mux.HandleFunc("/", handlers.HelloHandler)
 	mux.Handle("/login", handlers.LoginHandler(*secret, user.DB))
-	mux.Handle("/", handlers.JWTAuthHandler(handlers.HelloHandler))
+	mux.Handle("/secure", handlers.JWTAuthHandler(handlers.HelloHandler))
+	mux.Handle("/version", handlers.VersionHandler(version))
 
 	httpServer := manners.NewServer()
 	httpServer.Addr = *httpAddr
