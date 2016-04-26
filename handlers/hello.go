@@ -1,12 +1,20 @@
 package handlers
 
 import (
+	"encoding/json"
 	"net/http"
 	"time"
 )
 
+type HelloResponse struct {
+	Message string `json:"message"`
+}
+
 func HelloHandler(w http.ResponseWriter, r *http.Request) {
 	time.Sleep(2 * time.Second)
-	w.Write([]byte("<h1>Hello</h1>"))
+	response := HelloResponse{
+		Message: "Hello",
+	}
+	json.NewEncoder(w).Encode(response)
 	return
 }
