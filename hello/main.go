@@ -21,12 +21,12 @@ func main() {
 		httpAddr   = flag.String("http", "0.0.0.0:80", "HTTP service address.")
 		healthAddr = flag.String("health", "0.0.0.0:81", "Health service address.")
 	)
+	flag.Parse()
 
 	log.Println("Starting server...")
 	log.Printf("Health service listening on %s", *healthAddr)
 	log.Printf("HTTP service listening on %s", *httpAddr)
 
-	flag.Parse()
 	errChan := make(chan error, 10)
 
 	hmux := http.NewServeMux()

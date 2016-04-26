@@ -23,12 +23,12 @@ func main() {
 		healthAddr = flag.String("health", "0.0.0.0:81", "Health service address.")
 		secret     = flag.String("secret", "secret", "JWT signing secret.")
 	)
+	flag.Parse()
 
 	log.Println("Starting Auth service...")
 	log.Printf("Health service listening on %s", *healthAddr)
 	log.Printf("HTTP service listening on %s", *httpAddr)
 
-	flag.Parse()
 	errChan := make(chan error, 10)
 
 	hmux := http.NewServeMux()
