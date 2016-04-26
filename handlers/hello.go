@@ -3,7 +3,6 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
-	"time"
 )
 
 type HelloResponse struct {
@@ -11,7 +10,6 @@ type HelloResponse struct {
 }
 
 func HelloHandler(w http.ResponseWriter, r *http.Request) {
-	time.Sleep(2 * time.Second)
 	response := HelloResponse{
 		Message: "Hello",
 	}
