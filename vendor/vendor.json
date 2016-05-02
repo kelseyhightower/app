@@ -1,0 +1,31 @@
+{
+	"comment": "",
+	"ignore": "",
+	"package": [
+		{
+			"path": "github.com/braintree/manners",
+			"revision": "213a497c0285defc24f640dbdb8a30f7d7080310",
+			"revisionTime": "2016-03-17T11:22:23-05:00"
+		},
+		{
+			"path": "github.com/braintree/manners/test_helpers",
+			"revision": "213a497c0285defc24f640dbdb8a30f7d7080310",
+			"revisionTime": "2016-03-17T11:22:23-05:00"
+		},
+		{
+			"path": "github.com/dgrijalva/jwt-go",
+			"revision": "b446e078d613dc395bf50b08884acbeafb19ce50",
+			"revisionTime": "2016-03-31T11:13:52-07:00"
+		},
+		{
+			"path": "golang.org/x/crypto/bcrypt",
+			"revision": "3fbbcd23f1cb824e69491a5930cfeff09b12f4d2",
+			"revisionTime": "2016-04-06T11:11:13-05:00"
+		},
+		{
+			"path": "golang.org/x/crypto/blowfish",
+			"revision": "3fbbcd23f1cb824e69491a5930cfeff09b12f4d2",
+			"revisionTime": "2016-04-06T11:11:13-05:00"
+		}
+	]
+}

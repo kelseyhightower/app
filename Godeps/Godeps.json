@@ -2,27 +2,5 @@
 	"ImportPath": "github.com/kelseyhightower/app",
 	"GoVersion": "go1.6",
 	"GodepVersion": "v62",
-	"Packages": [
-		"./..."
-	],
-	"Deps": [
-		{
-			"ImportPath": "github.com/braintree/manners",
-			"Comment": "0.4.0-13-g213a497",
-			"Rev": "213a497c0285defc24f640dbdb8a30f7d7080310"
-		},
-		{
-			"ImportPath": "github.com/dgrijalva/jwt-go",
-			"Comment": "v2.5.0",
-			"Rev": "b446e078d613dc395bf50b08884acbeafb19ce50"
-		},
-		{
-			"ImportPath": "golang.org/x/crypto/bcrypt",
-			"Rev": "3fbbcd23f1cb824e69491a5930cfeff09b12f4d2"
-		},
-		{
-			"ImportPath": "golang.org/x/crypto/blowfish",
-			"Rev": "3fbbcd23f1cb824e69491a5930cfeff09b12f4d2"
-		}
-	]
+	"Deps": []
 }
