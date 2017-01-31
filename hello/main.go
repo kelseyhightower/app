@@ -20,6 +20,7 @@ func main() {
 	var (
 		httpAddr   = flag.String("http", "0.0.0.0:80", "HTTP service address.")
 		healthAddr = flag.String("health", "0.0.0.0:81", "Health service address.")
+		secret     = flag.String("secret", "secret", "JWT signing secret.")
 	)
 	flag.Parse()
 
@@ -44,7 +45,7 @@ func main() {
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", handlers.HelloHandler)
-	mux.Handle("/secure", handlers.JWTAuthHandler(handlers.HelloHandler))
+	mux.Handle("/secure", handlers.JWTAuthHandler(*secret, handlers.HelloHandler))
 	mux.Handle("/version", handlers.VersionHandler(version))
 
 	httpServer := manners.NewServer()

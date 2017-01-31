@@ -47,7 +47,7 @@ func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", handlers.HelloHandler)
 	mux.Handle("/login", handlers.LoginHandler(*secret, user.DB))
-	mux.Handle("/secure", handlers.JWTAuthHandler(handlers.HelloHandler))
+	mux.Handle("/secure", handlers.JWTAuthHandler(*secret, handlers.HelloHandler))
 	mux.Handle("/version", handlers.VersionHandler(version))
 
 	httpServer := manners.NewServer()
