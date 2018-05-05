@@ -1,6 +1,6 @@
 # App
 
-A sample 12 Facter Application.
+A sample [12 Factor Application](https://12factor.net/).
 
 ## Usage
 
